@@ -1,0 +1,39 @@
+{
+  "name": "hr-rag-platform",
+  "version": "1.0.0",
+  "description": "HR Assistant Platform with RAG Technology",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "install-deps": "npm install"
+  },
+  "dependencies": {
+    "@langchain/openai": "^0.0.14",
+    "chromadb": "^1.7.3",
+    "cors": "^2.8.5",
+    "docx": "^8.5.0",
+    "dotenv": "^16.6.1",
+    "express": "^4.21.2",
+    "fs-extra": "^11.3.2",
+    "langchain": "^0.0.176",
+    "mammoth": "^1.11.0",
+    "multer": "^1.4.5-lts.1",
+    "openai": "^4.20.1",
+    "pdf-parse": "^1.1.4",
+    "tesseract.js": "^6.0.1",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "keywords": [
+    "hr",
+    "rag",
+    "langchain",
+    "openai",
+    "vector-database"
+  ],
+  "author": "HR Team",
+  "license": "MIT"
+}

@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>لوحة تحكم المدير - مساعد الموارد البشرية</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📋</text></svg>">
+    <style>
+        :root {
+            --main-color: #1b5e20;
+            --secondary-color: #43A047;
+            --danger-color: #d32f2f;
+            --warning-color: #f57c00;
+            --success-color: #388e3c;
+            --bg-color: #f5f5f5;
+            --card-bg: #ffffff;
+            --border-color: #e0e0e0;
+            --font: 'RYA', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--bg-color);
+            direction: rtl;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--main-color), var(--secondary-color));
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .admin-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .admin-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+        }
+
+        .admin-card h2 {
+            color: var(--main-color);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            border-bottom: 3px solid var(--main-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .upload-area {
+            border: 3px dashed var(--main-color);
+            border-radius: 10px;
+            padding: 3rem 2rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            background: #f0f8f0;
+            border-color: var(--secondary-color);
+        }
+
+        .upload-area.dragover {
+            background: #e8f5e9;
+            border-color: var(--secondary-color);
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--main-color);
+        }
+
+        .upload-text h3 {
+            color: var(--main-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-text p {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .upload-btn {
+            background: var(--main-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: var(--font);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .upload-btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .progress-section {
+            margin-top: 1rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--main-color), var(--secondary-color));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            color: var(--main-color);
+            font-weight: bold;
+        }
+
+        .status-section {
+            margin-top: 1rem;
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+            background: #f9f9f9;
+            border-radius: 5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .status-success {
+            background: #e8f5e9;
+            color: var(--success-color);
+        }
+
+        .status-error {
+            background: #ffebee;
+            color: var(--danger-color);
+        }
+
+        .documents-list {
+            margin-top: 1rem;
+        }
+
+        .document-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: #f9f9f9;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            border-right: 4px solid var(--main-color);
+        }
+
+        .document-info {
+            flex: 1;
+        }
+
+        .document-name {
+            font-weight: bold;
+            color: var(--main-color);
+        }
+
+        .document-meta {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 0.25rem;
+        }
+
+        .document-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-family: var(--font);
+            font-size: 0.8rem;
+        }
+
+        .delete-btn {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background: #b71c1c;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--main-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+
+        .alert-success {
+            background: #e8f5e9;
+            color: var(--success-color);
+            border: 1px solid #c8e6c9;
+        }
+
+        .alert-error {
+            background: #ffebee;
+            color: var(--danger-color);
+            border: 1px solid #ffcdd2;
+        }
+
+        .alert-warning {
+            background: #fff3e0;
+            color: var(--warning-color);
+            border: 1px solid #ffcc02;
+        }
+
+        @media (max-width: 768px) {
+            .admin-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .header {
+                padding: 1rem;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏛️ لوحة تحكم المدير</h1>
+        <p>إدارة قوانين العمل ومراقبة النظام</p>
+    </div>
+
+    <div class="container">
+        <!-- Statistics -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="law-count">0</div>
+                <div class="stat-label">قوانين العمل المحملة</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="contract-count">0</div>
+                <div class="stat-label">العقود المحللة</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="total-chunks">0</div>
+                <div class="stat-label">إجمالي الأجزاء النصية</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="system-status">🟢</div>
+                <div class="stat-label">حالة النظام</div>
+            </div>
+        </div>
+
+        <!-- Alerts Section -->
+        <div id="alerts-section"></div>
+
+        <div class="admin-grid">
+            <!-- Upload Law Documents -->
+            <div class="admin-card">
+                <h2>📚 تحميل قوانين العمل</h2>
+                <div class="upload-area" id="law-upload-area">
+                    <div class="upload-icon">📁</div>
+                    <div class="upload-text">
+                        <h3>اسحب وأفلت ملفات قوانين العمل هنا</h3>
+                        <p>يدعم ملفات PDF و DOCX</p>
+                        <button class="upload-btn" onclick="document.getElementById('law-file-input').click()">
+                            اختيار الملفات
+                        </button>
+                    </div>
+                </div>
+                <input type="file" id="law-file-input" class="file-input" accept=".pdf,.docx" multiple>
+                
+                <div class="progress-section" id="law-progress" style="display: none;">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="law-progress-fill"></div>
+                    </div>
+                    <div class="progress-text" id="law-progress-text">جاري المعالجة...</div>
+                </div>
+
+                <div class="status-section" id="law-status"></div>
+            </div>
+
+            <!-- System Management -->
+            <div class="admin-card">
+                <h2>⚙️ إدارة النظام</h2>
+                
+                <div class="documents-list" id="documents-list">
+                    <p>جاري تحميل قائمة الوثائق...</p>
+                </div>
+
+                <div style="margin-top: 2rem;">
+                    <h3>إجراءات النظام</h3>
+                    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                        <button class="upload-btn" onclick="clearAllDocuments()" style="background: var(--danger-color);">
+                            🗑️ مسح جميع الوثائق
+                        </button>
+                        <button class="upload-btn" onclick="refreshSystem()" style="background: var(--warning-color);">
+                            🔄 تحديث النظام
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class AdminPanel {
+            constructor() {
+                this.apiBaseUrl = 'http://localhost:3001'; // API server URL
+                this.init();
+            }
+
+            init() {
+                this.bindEvents();
+                this.loadSystemStats();
+                this.loadDocuments();
+                this.checkSystemHealth();
+            }
+
+            bindEvents() {
+                const lawUploadArea = document.getElementById('law-upload-area');
+                const lawFileInput = document.getElementById('law-file-input');
+
+                lawUploadArea.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    lawUploadArea.classList.add('dragover');
+                });
+
+                lawUploadArea.addEventListener('dragleave', () => {
+                    lawUploadArea.classList.remove('dragover');
+                });
+
+                lawUploadArea.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    lawUploadArea.classList.remove('dragover');
+                    this.handleFileUpload(e.dataTransfer.files);
+                });
+
+                lawFileInput.addEventListener('change', (e) => {
+                    this.handleFileUpload(e.target.files);
+                });
+            }
+
+            async handleFileUpload(files) {
+                if (files.length === 0) return;
+
+                const progressSection = document.getElementById('law-progress');
+                const progressFill = document.getElementById('law-progress-fill');
+                const progressText = document.getElementById('law-progress-text');
+                const statusSection = document.getElementById('law-status');
+
+                progressSection.style.display = 'block';
+                statusSection.innerHTML = '';
+
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    const progress = ((i + 1) / files.length) * 100;
+                    
+                    progressFill.style.width = `${progress}%`;
+                    progressText.textContent = `جاري معالجة: ${file.name}`;
+
+                    try {
+                        await this.uploadLawFile(file);
+                        this.addStatusMessage(`✅ تم تحميل ${file.name} بنجاح`, 'success');
+                    } catch (error) {
+                        console.error('Upload error:', error);
+                        this.addStatusMessage(`❌ خطأ في تحميل ${file.name}: ${error.message}`, 'error');
+                    }
+                }
+
+                // Reset progress
+                setTimeout(() => {
+                    progressSection.style.display = 'none';
+                    progressFill.style.width = '0%';
+                    this.loadSystemStats();
+                    this.loadDocuments();
+                }, 2000);
+            }
+
+            async uploadLawFile(file) {
+                const formData = new FormData();
+                formData.append('document', file);
+
+                const response = await fetch(`${this.apiBaseUrl}/admin/upload-law`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (!result.success) {
+                    throw new Error(result.error);
+                }
+
+                return result;
+            }
+
+            addStatusMessage(message, type) {
+                const statusSection = document.getElementById('law-status');
+                const statusDiv = document.createElement('div');
+                statusDiv.className = `status-item status-${type}`;
+                statusDiv.textContent = message;
+                statusSection.appendChild(statusDiv);
+            }
+
+            async loadSystemStats() {
+                try {
+                    const response = await fetch(`${this.apiBaseUrl}/documents`);
+                    const result = await response.json();
+
+                    document.getElementById('law-count').textContent = result.lawDocuments || 0;
+                    document.getElementById('contract-count').textContent = result.contractDocuments || 0;
+                    document.getElementById('total-chunks').textContent = (result.lawDocuments || 0) + (result.contractDocuments || 0);
+                } catch (error) {
+                    console.error('Error loading stats:', error);
+                }
+            }
+
+            async loadDocuments() {
+                try {
+                    const response = await fetch(`${this.apiBaseUrl}/documents`);
+                    const result = await response.json();
+
+                    const documentsList = document.getElementById('documents-list');
+                    
+                    if (result.lawDocuments > 0 || result.contractDocuments > 0) {
+                        let html = '<h3>الوثائق المحملة</h3>';
+                        
+                        if (result.lawDocuments > 0) {
+                            html += `
+                                <div class="document-item">
+                                    <div class="document-info">
+                                        <div class="document-name">📚 قوانين العمل</div>
+                                        <div class="document-meta">${result.lawDocuments} قانون محمل</div>
+                                    </div>
+                                    <div class="document-actions">
+                                        <button class="action-btn delete-btn" onclick="clearDocuments('law')">حذف</button>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                        
+                        if (result.contractDocuments > 0) {
+                            html += `
+                                <div class="document-item">
+                                    <div class="document-info">
+                                        <div class="document-name">📄 عقود العمل</div>
+                                        <div class="document-meta">${result.contractDocuments} عقد محمل</div>
+                                    </div>
+                                    <div class="document-actions">
+                                        <button class="action-btn delete-btn" onclick="clearDocuments('contract')">حذف</button>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                        
+                        documentsList.innerHTML = html;
+                    } else {
+                        documentsList.innerHTML = '<p>لا توجد وثائق محملة</p>';
+                    }
+                } catch (error) {
+                    console.error('Error loading documents:', error);
+                    document.getElementById('documents-list').innerHTML = '<p>خطأ في تحميل قائمة الوثائق</p>';
+                }
+            }
+
+            async checkSystemHealth() {
+                try {
+                    const response = await fetch(`${this.apiBaseUrl}/health`);
+                    const result = await response.json();
+
+                    const statusElement = document.getElementById('system-status');
+                    if (result.status === 'OK') {
+                        statusElement.textContent = '🟢';
+                        statusElement.title = 'النظام يعمل بشكل طبيعي';
+                    } else {
+                        statusElement.textContent = '🔴';
+                        statusElement.title = 'مشكلة في النظام';
+                    }
+                } catch (error) {
+                    console.error('Error checking system health:', error);
+                    document.getElementById('system-status').textContent = '🔴';
+                }
+            }
+
+            showAlert(message, type) {
+                const alertsSection = document.getElementById('alerts-section');
+                const alertDiv = document.createElement('div');
+                alertDiv.className = `alert alert-${type}`;
+                alertDiv.textContent = message;
+                
+                alertsSection.appendChild(alertDiv);
+                
+                setTimeout(() => {
+                    alertDiv.remove();
+                }, 5000);
+            }
+        }
+
+        // Global functions
+        async function clearAllDocuments() {
+            if (confirm('هل أنت متأكد من حذف جميع الوثائق؟ هذا الإجراء لا يمكن التراجع عنه.')) {
+                try {
+                    const response = await fetch(`${adminPanel.apiBaseUrl}/documents`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({})
+                    });
+                    
+                    const result = await response.json();
+                    adminPanel.showAlert(result.message, 'success');
+                    adminPanel.loadSystemStats();
+                    adminPanel.loadDocuments();
+                } catch (error) {
+                    console.error('Error clearing documents:', error);
+                    adminPanel.showAlert('خطأ في حذف الوثائق', 'error');
+                }
+            }
+        }
+
+        async function clearDocuments(type) {
+            const typeText = type === 'law' ? 'قوانين العمل' : 'العقود';
+            
+            if (confirm(`هل أنت متأكد من حذف جميع ${typeText}؟`)) {
+                try {
+                    const response = await fetch(`${adminPanel.apiBaseUrl}/documents`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ type: type })
+                    });
+                    
+                    const result = await response.json();
+                    adminPanel.showAlert(result.message, 'success');
+                    adminPanel.loadSystemStats();
+                    adminPanel.loadDocuments();
+                } catch (error) {
+                    console.error('Error clearing documents:', error);
+                    adminPanel.showAlert('خطأ في حذف الوثائق', 'error');
+                }
+            }
+        }
+
+        async function refreshSystem() {
+            adminPanel.showAlert('جاري تحديث النظام...', 'warning');
+            await adminPanel.loadSystemStats();
+            await adminPanel.loadDocuments();
+            await adminPanel.checkSystemHealth();
+            adminPanel.showAlert('تم تحديث النظام بنجاح', 'success');
+        }
+
+        // Initialize admin panel
+        let adminPanel;
+        document.addEventListener('DOMContentLoaded', () => {
+            adminPanel = new AdminPanel();
+        });
+    </script>
+</body>
+</html> 

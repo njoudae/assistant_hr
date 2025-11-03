@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title> مساعد الموارد البشرية</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📋</text></svg>">
+  
+
+    <!-- TensorFlow + PDF.js + OCR -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.4.120/build/pdf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="rag-chat.js"></script>
+
+  <style>
+    :root {
+      --main-color: #1b5e20;
+      --card-bg: #ffffff;
+      --border-color: #e0e0e0;
+      --font: 'RYA', sans-serif;
+    }
+
+    body {
+      font-family: var(--font);
+      margin: 0;
+      background: var(--light-bg);
+      direction: rtl;
+    }
+
+    
+    /* ✅ الشريط العلوي */
+    .topbar {
+        background-color: #ffffff;
+        border-bottom: 1px solid #e0e0e0;
+        padding: 1rem 2rem;
+        display: grid;
+        grid-template-columns: 1fr auto 1fr; /* شعار - قائمة - فارغ */
+        align-items: center;
+}
+
+
+    .topbar .menu {
+        display: flex;
+        justify-content: center;
+        gap: 4rem;
+        font-size: 1rem;
+        color: #333;
+}
+
+
+
+    .topbar .logo {
+        display: flex;
+        align-items: center;
+}
+
+
+    .topbar .logo img {
+      height: 60px;
+      margin-left: 20px;
+    }
+
+
+    .topbar .menu a {
+      text-decoration: none;
+      color: #333;
+    }
+
+    .topbar .menu a:hover {
+      color: var(--main-color);
+    }
+
+    .container {
+      padding: 2rem;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    h2 {
+      margin-bottom: 1rem;
+      font-size: 1.8rem;
+      color: #333;
+      border-right: 4px solid var(--main-color);
+      padding-right: 10px;
+    }
+
+    .section {
+      margin-bottom: 3rem;
+    }
+
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      width: 230px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card h3 {
+      font-size: 1.2rem;
+      color: #222;
+      margin-bottom: 0.5rem;
+    }
+
+    .card p {
+      color: #444;
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+    }
+    .card-image {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 1rem 1rem 0 0;
+    margin-bottom: 1rem;
+    }
+
+    .hero-section {
+        background: linear-gradient(to left, #00796B, #43A047);
+
+        color: white;
+        text-align: center;
+        padding: 9rem 1rem;
+        font-family: 'RYA', sans-serif;
+        }
+
+        .hero-section h1 {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        }
+
+        .hero-section p {
+        font-size: 1.2rem;
+        opacity: 0.9;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .tag {
+      background-color: #e8f5e9;
+      color: var(--main-color);
+      padding: 0.3rem 0.7rem;
+      border-radius: 0.5rem;
+      font-size: 0.8rem;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .buttons button {
+      background-color: white;
+      border: 1px solid #ccc;
+      padding: 0.4rem 0.8rem;
+      border-radius: 0.5rem;
+      font-family: var(--font);
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+    .avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto 1rem;
+    display: block;
+    border: 3px solid #e0e0e0;
+    }
+
+    .buttons button:hover {
+      background-color: #f1f1f1;
+    }
+  </style>
+</head>
+<body>
+  <div style="position: fixed; bottom: 20px; left: 20px; z-index: 9999;">
+  <button onclick="triggerAvatar()" style="background: #1b5e20; color: white; border: none; padding: 12px 20px; border-radius: 25px; cursor: pointer; font-family: 'RYA', sans-serif; box-shadow: 0 4px 15px rgba(27, 94, 32, 0.3);">
+    🤖 تفعيل المساعد الذكي
+  </button>
+  </div>
+
+  <!-- ✅ الشريط العلوي -->
+  <div class="topbar">
+    <div class="logo">
+      <img src="assets/hrlogo1.png" alt="شعار الوزارة" />
+      <span style="font-size: 1.2rem; font-weight: bold;">مساعد الموارد البشرية</span>
+    </div>
+    <div class="menu">
+      <a href="#web">المنصات الرقمية</a>
+      <a href="#service">استشارات</a>
+      <a href="#team">فريق العمل</a>
+    </div>
+  </div>
+
+
+    <!-- ✅ سيكشن ترحيبي بعد الشريط العلوي مباشرة -->
+    <div class="hero-section">
+        <h1>منصتك الذكية لتمكين الموارد البشرية</h1>
+        <p>نحن هنا لنساعدك في الوصول إلى خدماتك بذكاء، سرعة، وكفاءة رقمية.</p>
+    </div>
+
+  <div class="container">
+
+    <!-- ✅ القسم الأول -->
+    <div class="section" id="web">
+      <h2>المنصات الرقمية</h2>
+      <div class="cards">
+        <div class="card">
+                     <img src="assets/qiwa.jpeg" alt="صورة الخدمة" class="card-image">
+          <h3>منصة قوى</h3>
+          <p>هي منصة رقمية توفر جميع خدمات منظومة العمل في المملكة العربية السعودية, وتمكّن مختلف أطرافها(موظفين - منشآت حكومية وخاصة) من تنظيم جميع تعاملاتها بطريقة مؤتمتة وفورية دون الحاجة إلى تعاملات ورقية.</p>
+          <div class="tags">
+            <div class="tag">منشآت حكومية</div>
+            <div class="tag">منشآت خاصة</div>
+            <div class="tag">موظفين</div>
+          </div>
+          <div class="buttons">
+            <button>التفاصيل</button>
+            <a href="https://qiwa.sa" target="_blank" rel="noopener noreferrer">
+            <button>رابط المنصة ←</button>
+            </a>
+          </div>
+        </div>
+
+
+
+        <div class="card">
+                     <img src="assets/Ajeer.png" alt="صورة الخدمة" class="card-image">
+          <h3> منصة أجير</h3>
+          <p>تسعى هذه المنصة الإلكترونية إلى تنظيم العمل المؤقت في المملكة العربية السعودية من خلال تيسير الوصول إلى القوى العاملة الموجودة داخلها كبديل عن استقدامها من الخارج, مما يُسهم في رفع كفاءة سوق العمل.</p>
+          <div class="tags">
+            <div class="tag"> العمل المؤقت</div>
+          </div>
+          <div class="buttons">
+            <button>التفاصيل</button>
+            <a href="https://ajeer.qiwa.sa/support" target="_blank" rel="noopener noreferrer">
+            <button>رابط المنصة ←</button>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ✅ القسم الثاني -->
+    <div class="section" id="service">
+      <h2>مقدمي الاستشارات</h2>
+      <div class="cards">
+        <div class="card">
+                     <img src="assets/person2.jpeg" alt="صورة أشخاص" class="avatar">
+          <h3>أ. أحمد عبدالله العتيبي</h3>
+          <p>خبير موارد بشرية بخبرة تتجاوز 13 سنة.</p>
+          <div class="tags">
+            <div class="tag">HR</div>
+          </div>
+          <div class="buttons">
+            <button>السيرة الذاتية</button>
+            <button>حجز موعد ←</button>
+          </div>
+        </div>
+
+        <div class="card">
+                     <img src="assets/person1.jpeg" alt="صورة أشخاص" class="avatar">
+          <h3>أ. عبدالعزيز ناصر المالكي</h3>
+          <p>خبير قانوني متخصص في القضايا العمالية.</p>
+          <div class="tags">
+            <div class="tag">قضايا عمالية</div>
+            <div class="tag">قانون</div>
+          </div>
+          <div class="buttons">
+            <button>السيرة الذاتية</button>
+            <button>حجز موعد ←</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ✅ القسم الثالث -->
+    <div class="section" id="team">
+      <h2>فريق العمل</h2>
+      <div class="cards">
+
+        <div class="card">
+           <img src="assets/Reem.jpg" alt="صورة أشخاص" class="avatar">
+           <h3>القائدة: ريـم محمد آل هيزع</h3>
+          <p>خريجة علوم الحاسب الآلي مهتمة بتصميم وتطوير واجهات المستخدم وتجربة العميل, متدربة في عمادة الخدمات الإلكترونية بجامعة الملك خالد مسار UI/UX</p>
+          <div class="tags">
+            <div class="tag">UI/UX</div>
+            <div class="tag">Atrificial Intelligence</div>
+            <div class="tag">Designer</div>
+            <div class="tag">Computer Science</div>
+            <div class="tag">KKU</div>
+
+          </div>
+          <div class="buttons">
+            <a href="https://wa.me/966509802547" target="_blank" rel="noopener noreferrer">
+            <button>WhatsApp</button>
+            </a>
+
+            <a href="https://www.linkedin.com/in/reem-mohammed-1a4abb250?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+            <button style="cursor: pointer;">LinkedIn ←</button>
+            </a>
+
+          </div>
+        </div>
+                <div class="card">
+           <img src="assets/njoud_98.jpg" alt="صورة أشخاص" class="avatar">
+           <h3>م. نجود عبدالعزيز بن إسحاق</h3>
+          <p>باحثة ماجستير في علوم الحاسب الآلي, متدربة في عمادة الخدمات الإلكترونية بجامعة الملك خالد مسار الذكاء الاصطناعي     .</p>
+          <div class="tags">
+            <div class="tag">Programmer</div>
+            <div class="tag">Atrificial Intelligence</div>
+            <div class="tag">Researcher</div>
+            <div class="tag">Computer Science</div>
+            <div class="tag">KKU</div>
+
+          </div>
+          <div class="buttons">
+            <a href="https://wa.me/966582968140" target="_blank" rel="noopener noreferrer">
+            <button>WhatsApp</button>
+            </a>
+
+            <a href="https://www.linkedin.com/in/nejood-a-eshaq-26a47b208/" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+            <button style="cursor: pointer;">LinkedIn ←</button>
+            </a>
+
+          </div>
+        </div>
+                 
+                 <div class="card">
+           <img src="assets/womenicon.jpg" alt="صورة أشخاص" class="avatar">
+           <h3>نسـرين مغرم الأسمري</h3>
+          <p>خريجة علوم الحاسب الآلي مهتمة بالتصميم الجرافيكي.</p>
+          <div class="tags">
+            <div class="tag">Designer</div>
+            <div class="tag">CS</div>
+            <div class="tag">KKU</div>
+          </div>
+          <div class="buttons">
+            <a href="https://wa.me/966555896269" target="_blank" rel="noopener noreferrer">
+            <button>WhatsApp</button>
+            </a>
+
+            <button>CV  ←</button>
+          </div>
+        </div>
+                 <div class="card">
+           <img src="assets/Munira.jpg" alt="صورة أشخاص" class="avatar">
+           <h3>منيرة ناصر عسيري</h3>
+          
+          <p>خريجة علوم الحاسب الآلي مهتمة بالتصوير الفوتوغرافي وكتابة المحتوى.</p>
+          <div class="tags">
+            <div class="tag">KKU</div>
+            <div class="tag">Photography</div>
+            <div class="tag">Content writer</div>
+          </div>
+          <div class="buttons">
+            <a href="https://wa.me/966530970182" target="_blank" rel="noopener noreferrer">
+            <button>WhatsApp</button>
+            </a>
+
+            <button>CV  ←</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  
+
+
+  </div>
+
+</body>
+</html>
