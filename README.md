@@ -1,5 +1,11 @@
 # 🤖 HR Assistant Platform with RAG Technology  
-منصة مساعد الموارد البشرية المدعومة بتقنية RAG للذكاء الاصطناعي 🇸🇦
+منصة مساعد الموارد البشرية المدعومة بتقنيات الذكاء الاصطناعي RAG & OCR & LLM  
+---
+
+## 📋 Overview
+
+The **HR Assistant Platform** is an intelligent system that merges traditional HR operations with advanced **Retrieval-Augmented Generation (RAG)** technology.  
+It enables users to upload **Saudi Labor Law documents** and receive **context-aware, Arabic-language legal answers** based directly on the uploaded material.
 
 ---
 
@@ -24,12 +30,6 @@
 
 ---
 
-## 📋 Overview
-
-The **HR Assistant Platform** is an intelligent system that merges traditional HR operations with advanced **Retrieval-Augmented Generation (RAG)** technology.  
-It enables users to upload **Saudi Labor Law documents** and receive **context-aware, Arabic-language legal answers** based directly on the uploaded material.
-
----
 
 ## ✨ Key Features
 
@@ -46,22 +46,6 @@ It enables users to upload **Saudi Labor Law documents** and receive **context-a
 - 🇸🇦 **Arabic Language Support (RTL)** full interface  
 
 ---
-
-## 🚀 Quick Start
-
-### Prerequisites
-- Node.js ≥ v16  
-- Valid OpenAI API key  
-- Modern browser (Chrome, Edge)  
-- VS Code with Live Server extension (optional)
-
-عدل لي المحتوى بصيغه readme # 🤖 HR Assistant Platform with RAG Technology
-
-منصة مساعد الموارد البشرية مع تقنية RAG للذكاء الاصطناعي
-
-## 📋 Overview
-
-This is a comprehensive HR Assistant Platform that combines traditional HR services with advanced RAG (Retrieval-Augmented Generation) technology. The system allows users to upload HR law documents and get intelligent, context-aware responses based on the uploaded content.
 
 ## ✨ Features
 
@@ -84,63 +68,6 @@ This is a comprehensive HR Assistant Platform that combines traditional HR servi
 - **OpenAI API**: GPT-4o and embeddings
 - **Express.js**: Backend server
 - **Modern UI**: Responsive design with Arabic RTL support
-
-## 🚀 Quick Start
-
-### Prerequisites
-- Node.js (v16 or higher)
-- OpenAI API key
-- Modern web browser
-- Live Server (VS Code extension) or similar local server
-
-### Installation
-
-1. **Clone or download the project**
-   ```bash
-   cd hrproject
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Set up environment variables**
-   ```bash
-   cp env.example .env
-   ```
-   
-   Edit `.env` file and add your OpenAI API key:
-   ```
-   OPENAI_API_KEY=your_api_key_here
-   OPENAI_MODEL=gpt-4o
-   ```
-
-4. **Add your law documents** 📚
-   ```bash
-   # Create the backend laws directory
-   mkdir backend_laws
-   
-   # Add your Saudi labor law documents here:
-   # - saudi_labor_law.pdf
-   # - social_insurance_law.docx
-   # - wage_protection_system.pdf
-   # - etc.
-   ```
-
-5. **Start the API server**
-   ```bash
-   npm start
-   ```
-
-6. **Start your frontend server**
-   - If using VS Code Live Server: Right-click `index.html` → "Open with Live Server"
-   - Or use any local server on port 5500
-
-7. **Access the system**
-   - Frontend: `http://127.0.0.1:5500/index.html`
-   - Admin Panel: `http://127.0.0.1:5500/admin.html`
-   - API Server: `http://localhost:3001`
 
 ## 📚 How to Use
 
@@ -296,10 +223,11 @@ MIT License - see LICENSE file for details
 ## 📞 Support
 
 For technical support or questions:
-- WhatsApp: +966 582968140 (Reem)
+- WhatsApp: +966 582968140 (Nejood)
 - LinkedIn: [Eng. Nejood A. Bin Eshaq](https://www.linkedin.com/in/nejood-a-eshaq-26a47b208/)
 
 ---
 
 **Built with ❤️ for the Saudi HR Community**
+
 
