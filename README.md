@@ -4,7 +4,7 @@
 
 ## 📋 Overview
 
-The **HR Assistant Platform** is an intelligent system that merges traditional HR operations with advanced **Retrieval-Augmented Generation (RAG)** technology.  
+The **HR Assistant Platform** is an intelligent system that merges traditional HR operations with advanced **Retrieval-Augmented Generation (RAG)**, **OCR** and **LLM** technology.  
 It enables users to upload **Saudi Labor Law documents** and receive **context-aware, Arabic-language legal answers** based directly on the uploaded material.
 
 ---
@@ -229,5 +229,6 @@ For technical support or questions:
 ---
 
 **Built with ❤️ for the Saudi HR Community**
+
 
 
